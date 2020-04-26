@@ -4,9 +4,11 @@ const config = require('./config')
 const jwt = require('jsonwebtoken')
 const { Entropy } = require('entropy-string')
 
+const keypair = Crypto.generateKeyPair();
+
 // Initialize aeternity SDK client
 let sdk
-const initSDK = async (keypair = config.keypair) => {
+const initSDK = async () => {
   sdk = await Ae({
     nodes: [
       {
@@ -32,7 +34,7 @@ const initSDK = async (keypair = config.keypair) => {
   // [app] generate login request token
   const loginRequestToken = generateLoginRequest(
     // requester public address
-    config.keypair.publicKey,
+    keypair.publicKey,
   )
 
   console.log('JWT Auth challenge:')
@@ -68,7 +70,7 @@ const initSDK = async (keypair = config.keypair) => {
   // [app] verify token and signed challenge
   const verifyWrong = verifyToken(
     // Test with different login request token
-    generateLoginRequest(config.keypair.publicKey),
+    generateLoginRequest(keypair.publicKey),
     signedChallenge,
   )
   console.log('Auth:')
